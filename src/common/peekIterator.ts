@@ -1,17 +1,19 @@
 import LinkedList from "linkedlist"
 
-type LinkedList = {
-  tail: any;
-  push: (_:any) => void;
-  length: number;
+
+export interface MyIterator  {
+  hasNext(): boolean | string;
+  peek(): any
+  putBack(): void;
+  next(): any;
 }
 const CACHE_SIZE = 10
-class PeekIterator {
-  it: string;
+class PeekIterator implements MyIterator{
+  it: Generator;
   stackPutBack: LinkedList
   queueCache: LinkedList
-  endToken: string
-  constructor(it: string, endToken: string) {
+  endToken: string | null
+  constructor(it: Generator, endToken: string) {
     this.it = it
     this.stackPutBack = new LinkedList()
     this.queueCache = new LinkedList() //时间窗口 存储10个

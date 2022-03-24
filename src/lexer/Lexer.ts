@@ -1,14 +1,14 @@
 import Token from './Token';
-const PeekIterator = require("./../common/peekIterator")
-const tokenType = require("./tokenType")
-const AlphabetHelper = require("./AlphabetHelper")
-const LexicalException = require("./LexicalException")
+import PeekIterator from "./../common/peekIterator"
+import tokenType  from "./tokenType"
+import AlphabetHelper  from "./AlphabetHelper"
+import LexicalException from "./LexicalException"
 class Lexer {
   tokens: Array<Token>
   constructor() {
     this.tokens = []
   }
-  analyse(source: string) {
+  analyse(source: Generator) {
     const it = new PeekIterator(source, "/0")
     while (it.hasNext()) {
       let c = it.next()
@@ -52,7 +52,7 @@ class Lexer {
       }
       if (AlphabetHelper.isNumber(c)) {
         it.putBack() //需要加上'或者" 回退一次
-        this.tokens.push(Token.makeNumber(it)) //生成字符串token
+        this.tokens.push(Token.makeNumber(it) as Token) //生成字符串token
         continue
       }
       if ((c === "+" || c === "-") && AlphabetHelper.isNumber(it.peek())) {
@@ -62,13 +62,13 @@ class Lexer {
         if (last == null && !last.isValue()) {
           //能直接参与计算的表达式  +5  || 6*5
           it.putBack()
-          this.tokens.push(Token.makeNumber(it))
+          this.tokens.push(Token.makeNumber(it)  as Token)
           continue
         }
       }
       if (AlphabetHelper.isOperator(c)) {
         it.putBack()
-        this.tokens.push(Token.makeOp(it))
+        this.tokens.push(Token.makeOp(it) as Token)
         continue
       }
       LexicalException.fromChar(c)
@@ -76,4 +76,4 @@ class Lexer {
     return this.tokens
   }
 }
-module.exports = Lexer
+export default Lexer

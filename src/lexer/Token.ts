@@ -1,6 +1,7 @@
 import tokenType from "./TokenType"
 import AlphabetHelper from './AlphabetHelper';
 import LexicalException from './LexicalException';
+import { MyIterator } from "@/common/peekIterator";
 const Keywords = new Set([
   "var",
   "if",
@@ -46,7 +47,7 @@ class Token {
   toString() {
     return `type ${this._type} value ${this._val}`
   }
-  static makeNumber(it) {
+  static makeNumber(it: MyIterator ) {
     let s = "",
       state = 0,
       lookHead
@@ -112,7 +113,7 @@ class Token {
       it.next()
     }
   }
-  static makeOp(it) {
+  static makeOp(it: MyIterator) {
     let s = "",
       state = 0,
       lookHead
@@ -247,7 +248,7 @@ class Token {
       }
     }
   }
-  static makeString(it) {
+  static makeString(it: MyIterator) {
     let s = "",
       state = 0
     while (it.hasNext()) {
@@ -281,7 +282,7 @@ class Token {
     }
     throw new LexicalException("Exception Error")
   }
-  static makeVarOrKeyword(it) {
+  static makeVarOrKeyword(it: MyIterator) {
     let s = ""
     while (it.hasNext()) {
       const c = it.peek()
