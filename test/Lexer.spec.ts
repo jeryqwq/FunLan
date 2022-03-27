@@ -1,4 +1,3 @@
-import AlphabetHelper from "./../src/lexer/AlphabetHelper"
 import arraytoGenerator  from "./../src/common/arraytoGenerator";
 import Lexer  from "./../src/lexer/Lexer";
 import TokenTypes from "../src/lexer/TokenType";
@@ -21,14 +20,12 @@ describe("operator + var + number ----", () => {
     expect(lex.tokens[4].getType()).toBe(TokenTypes.FLOAT.type);
     expect(lex.tokens[5].getVal()).toBe('==');
     expect(lex.tokens[5].getType()).toBe(TokenTypes.OPERATOR.type);
-    expect(lex.tokens[6].getVal()).toBe('+');
-    expect(lex.tokens[6].getType()).toBe(TokenTypes.OPERATOR.type);
-    expect(lex.tokens[7].getVal()).toBe('100');
-    expect(lex.tokens[7].getType()).toBe(TokenTypes.INTEGER.type);
-    expect(lex.tokens[8].getVal()).toBe('-');
-    expect(lex.tokens[8].getType()).toBe(TokenTypes.OPERATOR.type);
-    expect(lex.tokens[9].getVal()).toBe('12');
-    expect(lex.tokens[9].getType()).toBe(TokenTypes.INTEGER.type);
+    expect(lex.tokens[6].getVal()).toBe('+100');
+    expect(lex.tokens[6].getType()).toBe(TokenTypes.INTEGER.type);
+    expect(lex.tokens[7].getVal()).toBe('-');
+    expect(lex.tokens[7].getType()).toBe(TokenTypes.OPERATOR.type);
+    expect(lex.tokens[8].getVal()).toBe('12');
+    expect(lex.tokens[8].getType()).toBe(TokenTypes.INTEGER.type);
   });
 });
 describe('func + ', () => {
@@ -37,12 +34,11 @@ describe('func + ', () => {
     arraytoGenerator([
       ...`func add(a,b){
       return a+b
-    } 
+    }
+
     //这是注释语句，应该被忽略
-    /*
-    这是注释语句，应该被忽略
-    */
-    add(3,6)
+    const aaa = 123
+    let ddd = 3*23
   `,
     ])
   )
@@ -72,5 +68,12 @@ describe('func + ', () => {
   expect(lex.tokens[11].getType()).toBe(TokenTypes.VARIABLE.type);
   expect(lex.tokens[12].getVal()).toBe('}');
   expect(lex.tokens[12].getType()).toBe(TokenTypes.BRACKET.type);
+  expect(lex.tokens[13].getVal()).toBe('const');
+  expect(lex.tokens[13].getType()).toBe(TokenTypes.KEYWORD.type);
+  expect(lex.tokens[14].getVal()).toBe('aaa');
+  expect(lex.tokens[14].getType()).toBe(TokenTypes.VARIABLE.type);
+  expect(lex.tokens[16].getVal()).toBe("123");
+  expect(lex.tokens[16].getType()).toBe(TokenTypes.INTEGER.type);
+
 })
 

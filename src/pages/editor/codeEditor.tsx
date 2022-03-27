@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 function CodeEditor() {
   const handleKeyDown = useCallback((e:React.KeyboardEvent<HTMLDivElement>) => {
-    const { anchorNode } = document.getSelection()
+    const { anchorNode = {} } = document.getSelection() || {}
     const el = document.createElement('span')
     el.style.color='red'
     el.textContent = 'TEST'

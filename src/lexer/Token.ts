@@ -21,9 +21,11 @@ const Types = new Set(["int", "string", "float"])
 class Token {
   _type: string
   _val: string
-  constructor(type: string, val: string) {
+  line: number
+  constructor(type: string, val: string, line: number) {
     this._type = type
     this._val = val
+    this.line = line
   }
   getType() {
     return this._type
@@ -37,6 +39,10 @@ class Token {
   isVariable() {
     return this._type === tokenType.VARIABLE.type
   }
+  isValue() {
+    return this.isScalar() || this.isVariable();
+  }
+
   isScalar() {
     return (
       this._type === tokenType.INTEGER.type ||
@@ -47,7 +53,7 @@ class Token {
   toString() {
     return `type ${this._type} value ${this._val}`
   }
-  static makeNumber(it: MyIterator ) {
+  static makeNumber(it: MyIterator, line: number ) {
     let s = "",
       state = 0,
       lookHead
@@ -71,7 +77,7 @@ class Token {
           } else if (lookHead === ".") {
             state = 5 //累计浮点数
           } else {
-            return new Token(tokenType.INTEGER.type, s)
+            return new Token(tokenType.INTEGER.type, s, line)
           }
           break
         case 2:
@@ -80,7 +86,7 @@ class Token {
           } else if (AlphabetHelper.isNumber(lookHead)) {
             state = 2
           } else {
-            return new Token(tokenType.INTEGER.type, s)
+            return new Token(tokenType.INTEGER.type, s, line)
           }
           break
         case 3:
@@ -89,7 +95,7 @@ class Token {
           } else if (lookHead === ".") {
             state = 5
           } else {
-            return new Token(tokenType.INTEGER.type, s)
+            return new Token(tokenType.INTEGER.type, s, line)
           }
           break
         case 4:
@@ -98,14 +104,14 @@ class Token {
           } else if (AlphabetHelper.isNumber(lookHead)) {
             state = 2
           } else {
-            return new Token(tokenType.FLOAT.type, s)
+            return new Token(tokenType.FLOAT.type, s, line)
           }
           break
         case 5:
           if (AlphabetHelper.isNumber(lookHead)) {
             state = 5
           } else {
-            return new Token(tokenType.FLOAT.type, s)
+            return new Token(tokenType.FLOAT.type, s, line)
           }
       }
 
@@ -113,7 +119,7 @@ class Token {
       it.next()
     }
   }
-  static makeOp(it: MyIterator) {
+  static makeOp(it: MyIterator, line: number) {
     let s = "",
       state = 0,
       lookHead
@@ -154,101 +160,101 @@ class Token {
               state = 10
               break
             case ",":
-              return new Token(tokenType.OPERATOR.type, ",")
+              return new Token(tokenType.OPERATOR.type, ",", line)
               break
             case ";":
-              return new Token(tokenType.OPERATOR.type, ";")
+              return new Token(tokenType.OPERATOR.type, ";", line)
               break
           }
           break
         case 1:
           if (lookHead === "+") {
-            return new Token(tokenType.OPERATOR.type, "++")
+            return new Token(tokenType.OPERATOR.type, "++", line)
           } else if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "+=")
+            return new Token(tokenType.OPERATOR.type, "+=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "+")
+            return new Token(tokenType.OPERATOR.type, "+", line)
           }
           break
         case 2:
           if (lookHead === "-") {
-            return new Token(tokenType.OPERATOR.type, "--")
+            return new Token(tokenType.OPERATOR.type, "--", line)
           } else if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "-=")
+            return new Token(tokenType.OPERATOR.type, "-=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "-")
+            return new Token(tokenType.OPERATOR.type, "-", line)
           }
           break
         case 3:
           if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "*=")
+            return new Token(tokenType.OPERATOR.type, "*=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "*")
+            return new Token(tokenType.OPERATOR.type, "*", line)
           }
           break
         case 4:
           if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "/=")
+            return new Token(tokenType.OPERATOR.type, "/=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "/")
+            return new Token(tokenType.OPERATOR.type, "/", line)
           }
           break
         case 5:
           if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "%=")
+            return new Token(tokenType.OPERATOR.type, "%=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "%")
+            return new Token(tokenType.OPERATOR.type, "%", line)
           }
           break
         case 6:
           if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, ">=")
+            return new Token(tokenType.OPERATOR.type, ">=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, ">")
+            return new Token(tokenType.OPERATOR.type, ">", line)
           }
           break
         case 7:
           if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "<=")
+            return new Token(tokenType.OPERATOR.type, "<=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "<")
+            return new Token(tokenType.OPERATOR.type, "<", line)
           }
           break
         case 8:
           if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "!=")
+            return new Token(tokenType.OPERATOR.type, "!=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "!")
+            return new Token(tokenType.OPERATOR.type, "!", line)
           }
           break
         case 9:
           if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "^=")
+            return new Token(tokenType.OPERATOR.type, "^=", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "^")
+            return new Token(tokenType.OPERATOR.type, "^", line)
           }
           break
         case 10:
           if (lookHead === "=") {
-            return new Token(tokenType.OPERATOR.type, "==")
+            return new Token(tokenType.OPERATOR.type, "==", line)
           } else {
             it.putBack()
-            return new Token(tokenType.OPERATOR.type, "=")
+            return new Token(tokenType.OPERATOR.type, "=", line)
           }
           break
       }
     }
   }
-  static makeString(it: MyIterator) {
+  static makeString(it: MyIterator, line: number) {
     let s = "",
       state = 0
     while (it.hasNext()) {
@@ -266,14 +272,14 @@ class Token {
           break
         case 1:
           if (c === "'") {
-            return new Token(tokenType.STRING.type, s + c)
+            return new Token(tokenType.STRING.type, s + c, line)
           } else {
             s += c
           }
           break
         case 2:
           if (c === '"') {
-            return new Token(tokenType.STRING.type, s + c)
+            return new Token(tokenType.STRING.type, s + c, line)
           } else {
             s += c
           }
@@ -282,7 +288,7 @@ class Token {
     }
     throw new LexicalException("Exception Error")
   }
-  static makeVarOrKeyword(it: MyIterator) {
+  static makeVarOrKeyword(it: MyIterator, line: number) {
     let s = ""
     while (it.hasNext()) {
       const c = it.peek()
@@ -294,12 +300,12 @@ class Token {
       it.next()
     }
     if (Keywords.has(s)) {
-      return new Token(tokenType.KEYWORD.type, s)
+      return new Token(tokenType.KEYWORD.type, s, line)
     }
     if (s === "true" || s === "false") {
-      return new Token(tokenType.BOOLEAN.type, s)
+      return new Token(tokenType.BOOLEAN.type, s, line)
     }
-    return new Token(tokenType.VARIABLE.type, s)
+    return new Token(tokenType.VARIABLE.type, s, line)
   }
 }
 export default Token

@@ -1,3 +1,4 @@
+import Token from "@/lexer/Token";
 import LinkedList from "linkedlist"
 
 
@@ -7,13 +8,27 @@ export interface MyIterator  {
   putBack(): void;
   next(): any;
 }
+export interface MyTokenIterator<T>  {
+  hasNext(): boolean | string;
+  peek(): T
+  putBack(): void;
+  next(): T;
+  nextMatch:(_: string) => T
+  nextMatchType:(_: string) => string
+}
 const CACHE_SIZE = 10
-class PeekIterator implements MyIterator{
-  it: Generator;
+class PeekIterator<T> implements MyIterator{
+  it: MyTokenIterator<{
+    value: string;
+  }>;
   stackPutBack: LinkedList
   queueCache: LinkedList
   endToken: string | null
-  constructor(it: Generator, endToken: string) {
+  constructor(it: MyTokenIterator<
+    {
+      value: string;
+    }
+    >, endToken: string) {
     this.it = it
     this.stackPutBack = new LinkedList()
     this.queueCache = new LinkedList() //时间窗口 存储10个
