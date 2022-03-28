@@ -1,3 +1,4 @@
+// @ts-nocheck 
 import arraytoGenerator  from "./../src/common/arraytoGenerator";
 import Lexer  from "./../src/lexer/Lexer";
 import TokenTypes from "../src/lexer/TokenType";

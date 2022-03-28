@@ -1,3 +1,4 @@
+// @ts-nocheck 
 import AlphabetHelper from "./../src/lexer/AlphabetHelper"
 
 describe("基本类型-------", () => {
