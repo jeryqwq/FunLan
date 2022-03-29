@@ -1,5 +1,5 @@
 import { MyTokenIterator } from "@/common/peekIterator";
-import AlphabetHelper from "@/lexer/AlphabetHelper";
+import AlphabetHelper from "./../../lexer/AlphabetHelper";
 import Token from "@/lexer/Token";
 
 // AST DEMO
@@ -40,10 +40,11 @@ export default function (it: MyTokenIterator<Token>) {
   let astObj = {
     type: 'VariableDeclaration',
     kind: 'let',
-    declarations: [
-      name: varName,
-      value: 
-    ]
+    // token: 
+    // declarations: [
+    //   name: varName,
+    //   value: 
+    // ]
   }
 
   return 

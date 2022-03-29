@@ -42,7 +42,7 @@ class PeekIterator<T> implements MyIterator{
     if (this.stackPutBack.length > 0) {
       return this.stackPutBack.tail
     }
-    const val = this.it.next && this.it.next().value
+    const val = this.it.next && this.it.next()
     if (val) {
       this.queueCache.push(val)
       this.putBack()
@@ -63,7 +63,7 @@ class PeekIterator<T> implements MyIterator{
       //优先从栈中读取
       val = this.stackPutBack.pop()
     } else {
-      val = this.it.next().value //没有则从迭代器中读取
+      val = this.it.next() //没有则从迭代器中读取
       const temp = this.endToken
       this.endToken = null
       if (!val) return temp
