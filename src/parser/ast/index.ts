@@ -9,12 +9,13 @@ export default function (it: MyTokenIterator<Token>)  {
   const token = it.next()
   const lookhead = it.peek()
   it.putBack()
-debugger
    // 赋值语句
+  // https://zhuanlan.zhihu.com/p/137509746 普拉特解析法
+  let tree = null,left = null;
   if (token.isVariable() && lookhead.getVal() === "=") {
     // return parseAssign(it)
   } else if (token.getVal() === "let" && lookhead.isVariable()) { // 定义变量
-    return parseAssign(it)
+    left = parseAssign(it)
   }
   //  else if (token.getVal() === "if") {
   //   return IfStmt.parse(it)

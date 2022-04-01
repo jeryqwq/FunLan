@@ -1,3 +1,3 @@
-export default class Stmt {
+export default function () {
 
 }

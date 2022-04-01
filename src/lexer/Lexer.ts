@@ -1,6 +1,6 @@
 import Token from './Token';
 import PeekIterator, { MyTokenIterator } from "./../common/peekIterator"
-import tokenType  from "./tokenType"
+import tokenType  from "./TokenType"
 import AlphabetHelper  from "./AlphabetHelper"
 import LexicalException from "./LexicalException"
 let line = 1

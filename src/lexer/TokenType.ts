@@ -1,6 +1,5 @@
-import { EnumType } from "@/common/enum"
 
-import Enum from "./../common/enum"
+import Enum,  { EnumType } from "./../common/enum"
 const TokenTypes : Record<string, EnumType> = {
   KEYWORD: new Enum("KEYWPRD", 1),
   VARIABLE: new Enum("VARIABLE", 1),

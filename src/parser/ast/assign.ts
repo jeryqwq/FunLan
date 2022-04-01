@@ -31,22 +31,29 @@ import Token from "@/lexer/Token";
 //   "kind": "let"
 // },
 export default function (it: MyTokenIterator<Token>) {
+  const kind = it.next()
   const varName = it.next().getVal()
   const opTk = it.next()
   const isOp = AlphabetHelper.isOperator(opTk.getVal())
   if(!isOp) {
     throw new Error(`syntx error in ${opTk.getVal()} at ${opTk.line}`)
   }
+  let tree = null, left = null, lastTkVal;
+  
+// let tips = 123
+// let tipsStr = "123"
+// let tipsFnExec = test()
+// let tipsExpression = 1 + 2 + 3 
+// let tipsExpressionAndFn = 1 + (4 * 3) + test()
   let astObj = {
-    type: 'VariableDeclaration',
-    kind: 'let',
-    // token: 
-    // declarations: [
-    //   name: varName,
-    //   value: 
-    // ]
+    left:null,
+    mid:null,
+    op:kind,
+    option:null,
+    right:null,
+    value: varName,
   }
 
-  return 
+  return astObj
 }
 
