@@ -19,7 +19,7 @@ function CodeEditor() {
         const lex = new Lexer()
         const tks = lex.analyse(
           arraytoGenerator([
-            ...` let a = 123; 
+            ...` let a = aaa; 
         `,
         ])
       )

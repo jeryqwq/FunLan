@@ -1,6 +1,7 @@
 import { MyTokenIterator } from "@/common/peekIterator";
 import AlphabetHelper from "./../../lexer/AlphabetHelper";
 import Token from "@/lexer/Token";
+import expression from "./express";
 
 // AST DEMO
 // let tips = 123
@@ -34,26 +35,28 @@ export default function (it: MyTokenIterator<Token>) {
   const kind = it.next()
   const varName = it.next().getVal()
   const opTk = it.next()
-  const isOp = AlphabetHelper.isOperator(opTk.getVal())
-  if(!isOp) {
-    throw new Error(`syntx error in ${opTk.getVal()} at ${opTk.line}`)
+  if(opTk.getVal() !== '=') {
+    throw new Error(`syntx error in ${opTk.getVal()} at ${opTk.line}, it should be =`)
   }
-  let tree = null, left = null, lastTkVal;
-  
+  let astObj: any = {
+    type: "VariableDeclaration",
+    expression: {
+      left:null,
+      mid:null,
+      op:kind,
+      option:null,
+      right:null,
+      value: varName,
+      init: {}
+    }
+  }
+  astObj.expression.init = expression(it, astObj)
+  return astObj
 // let tips = 123
 // let tipsStr = "123"
 // let tipsFnExec = test()
 // let tipsExpression = 1 + 2 + 3 
 // let tipsExpressionAndFn = 1 + (4 * 3) + test()
-  let astObj = {
-    left:null,
-    mid:null,
-    op:kind,
-    option:null,
-    right:null,
-    value: varName,
-  }
 
-  return astObj
 }
 

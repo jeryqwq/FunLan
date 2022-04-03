@@ -1,5 +1,7 @@
 import { MyTokenIterator } from "@/common/peekIterator";
+import AlphabetHelper from "@/lexer/AlphabetHelper";
 import Token from "@/lexer/Token";
+import TokenType from "@/lexer/TokenType";
 import { tokenTypes } from "./token";
 const precedenceList = {
   "":0,
@@ -14,39 +16,66 @@ const precedenceList = {
   call:8,
 };
 
-
-function infix(precedence: any,left: any,type: any){
-  let right = expression(precedence);
-  return {
-    type,left,right
+export function getLiteral (tk: Token) {
+  switch (tk.getType()) {
+    case TokenType.VARIABLE.type:
+        return VariableDeclaration(tk)
+      break;
+      case TokenType.INTEGER.type:
+        return IntegerLiteral(tk)
+      break;
+      case TokenType.STRING.type:
+        return StringLiteral(tk)
+      break;
+    default:
+      break;
   }
 }
-export default function expression(it: MyTokenIterator<Token>) {
-  const tk = it.next();
 
+export default function expression(it: MyTokenIterator<Token>, ast: any) {
+  const tk = it.next(); // value | number | fn | var
+  const lookhead = it.peek();
+  const curAst = {
+    left: null,
+    right: null,
+    op: undefined,
+  }
+  debugger
+  if(lookhead.getVal() === ';') { // 下个如果不是操作符的话那就说明只是简单的基本类型或者变量
+    return getLiteral(tk)
+  }else { // 这里处理表达式的情况
+
+  }
   return {
 
   }
 }
-export const IntegerLiteral = function (it: MyTokenIterator<Token>) {
-  const tk = it.next();
+export const IntegerLiteral = function (tk: Token) {
   return {
     desc: 'Integer value: is' + tk.getVal(),
     token: tk,
     value: tk.getVal(),
-    type: tk.getType()
+    type: 'IntegerLiteral'
   }
 }
 export const BooleanLiteral = function (it:MyTokenIterator<Token>) {
 
 }
-export const StringLiteral = function (it:MyTokenIterator<Token>) {}
-const prefixParserMap = {
-  // [tokenTypes.T_IDENT]:identifier,
-  [tokenTypes.T_INT]:IntegerLiteral,
-  [tokenTypes.T_STRING]:StringLiteral,
-  // [tokenTypes.T_LPT]:group,
-  // [tokenTypes.T_LMBR]:array,
-  // [tokenTypes.T_ADD]:prefix.bind(null,tokenTypes.T_ADD),
-  // [tokenTypes.T_SUB]:prefix.bind(null,tokenTypes.T_SUB),
-};
+export const VariableDeclaration = function (tk: Token) {
+  return {
+    desc: 'var value: is' + tk.getVal(),
+    token: tk,
+    value: tk.getVal(),
+    type: 'Identifier',
+    name: tk.getVal()
+  }
+}
+export const StringLiteral = function (tk:Token) {
+  return {
+    desc: 'String value: is' + tk.getVal(),
+    token: tk,
+    value: tk.getVal(),
+    type: 'StringLiteral'
+  }
+}
+
