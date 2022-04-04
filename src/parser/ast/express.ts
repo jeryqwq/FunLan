@@ -40,19 +40,28 @@ export default function expression(it: MyTokenIterator<Token>, ast: any) {
     right: null,
     op: undefined,
   }
-  debugger
   if(lookhead.getVal() === ';') { // 下个如果不是操作符的话那就说明只是简单的基本类型或者变量
     return getLiteral(tk)
-  }else { // 这里处理表达式的情况
+  }else { // 这里处理表达式的情况 前序 中序 复杂表达式
+    if(tk.getVal() === '+' || tk.getVal() === '-' || tk.getVal() === '!') { // 前序
+      return perfix(it, tk)
+    }else{ // 复杂表达式
 
+    }
   }
+  return curAst
+}
+export const perfix =function (it: MyTokenIterator<Token>, tk: Token) {
   return {
-
+    type: 'UnaryExpression',
+    op: tk.getVal(),
+    prefix: true,
+    name: it.next().getVal()
   }
 }
 export const IntegerLiteral = function (tk: Token) {
   return {
-    desc: 'Integer value: is' + tk.getVal(),
+    desc: 'Integer value: is ' + tk.getVal(),
     token: tk,
     value: tk.getVal(),
     type: 'IntegerLiteral'
@@ -61,9 +70,14 @@ export const IntegerLiteral = function (tk: Token) {
 export const BooleanLiteral = function (it:MyTokenIterator<Token>) {
 
 }
+export const UnaryLiteral = function (tk: Token) { // 前序
+  return {
+    op: ''
+  }
+}
 export const VariableDeclaration = function (tk: Token) {
   return {
-    desc: 'var value: is' + tk.getVal(),
+    desc: 'var value: is ' + tk.getVal(),
     token: tk,
     value: tk.getVal(),
     type: 'Identifier',
@@ -72,7 +86,7 @@ export const VariableDeclaration = function (tk: Token) {
 }
 export const StringLiteral = function (tk:Token) {
   return {
-    desc: 'String value: is' + tk.getVal(),
+    desc: 'String value: is ' + tk.getVal(),
     token: tk,
     value: tk.getVal(),
     type: 'StringLiteral'

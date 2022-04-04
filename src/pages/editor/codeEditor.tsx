@@ -5,7 +5,7 @@ import parser from '@/parser/ast/index'
 import PeekIterator from '@/common/peekIterator'
 import { useEffect } from 'react';
 import Token from '@/lexer/Token';
-
+import exec from '@/exec'
 
 function CodeEditor() {
   const handleKeyDown = useCallback((e:React.KeyboardEvent<HTMLDivElement>) => {
@@ -19,13 +19,14 @@ function CodeEditor() {
         const lex = new Lexer()
         const tks = lex.analyse(
           arraytoGenerator([
-            ...` let a = aaa; 
+            ...` let a = !2; 
         `,
         ])
       )
       console.log(tks)
       const it = new PeekIterator<Token>(arraytoGenerator(tks), '\n')
-      parser(it)
+      const program = parser(it)
+      exec(program)
   })
   return (
     <div contentEditable="true" onKeyDown={handleKeyDown} style={{height: '80vh'}}>

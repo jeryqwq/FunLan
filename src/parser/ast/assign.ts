@@ -40,17 +40,9 @@ export default function (it: MyTokenIterator<Token>) {
   }
   let astObj: any = {
     type: "VariableDeclaration",
-    expression: {
-      left:null,
-      mid:null,
-      op:kind,
-      option:null,
-      right:null,
-      value: varName,
-      init: {}
-    }
+    init: {}
   }
-  astObj.expression.init = expression(it, astObj)
+  astObj.init = expression(it, astObj)
   return astObj
 // let tips = 123
 // let tipsStr = "123"
