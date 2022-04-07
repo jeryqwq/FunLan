@@ -6,6 +6,9 @@ export class SymbolTable  {
     this.program = program;
     this.vars = {}
   }
+  setParent (_: SymbolTable) {
+    this.parent = _
+  }
   getVar (key: string) {
     if(this.vars[key]) return this.vars[key];
     let curP = this.parent 

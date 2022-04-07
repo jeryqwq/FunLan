@@ -4,52 +4,68 @@ import Token from "@/lexer/Token";
 import TokenType from "@/lexer/TokenType";
 import { tokenTypes } from "./token";
 const precedenceList = {
-  "":0,
-  assign:1,
-  condition:2,
-  and:2.5,
-  compare:3,
-  sum:4,
-  product:5,
-  prefix:6,
-  postfix:7,
-  call:8,
+   '+': 0,
+   '-': 0,
+   '*': 1,
+   '/': 1,
+   'call': 9
 };
 
-export function getLiteral (tk: Token) {
+export function getLiteral (it: MyTokenIterator<Token>,tk: Token, ast?: any,  prevPoint?: number) {
+  const parentAst:any = ast ||  {
+    left: null,
+    right: null,
+  }
+  parentAst.op =  it.peek().getVal()
+  let curAst: any
   switch (tk.getType()) {
     case TokenType.VARIABLE.type:
-        return VariableDeclaration(tk)
+      curAst =  VariableDeclaration(tk)
       break;
       case TokenType.INTEGER.type:
-        return IntegerLiteral(tk)
+        curAst =  IntegerLiteral(tk)
       break;
       case TokenType.STRING.type:
-        return StringLiteral(tk)
+        curAst = StringLiteral(tk)
+      break;
+      case '+' || '-' || '!': // 前序 处理两个值 !a !123
+      curAst =  perfix(it, tk)
       break;
     default:
+      curAst = {
+        type: 'unknow'
+      }
       break;
   }
+  const nextTk = it.next()
+  if(nextTk && nextTk.getType() === TokenType.OPERATOR.type) { // 下一个还是操作符 + - * /
+    const percdence = precedenceList[nextTk.getVal() as '/']
+    if(prevPoint) {
+      if(prevPoint > percdence) {
+        parentAst.right = curAst
+      }else{
+        parentAst.left = curAst
+      }
+    }else{
+      parentAst.right = curAst
+    }
+    it.peek() && getLiteral(it, it.next(), curAst, percdence)
+  }
+  return parentAst
 }
 
 export default function expression(it: MyTokenIterator<Token>, ast: any) {
   const tk = it.next(); // value | number | fn | var
-  const lookhead = it.peek();
-  const curAst = {
-    left: null,
-    right: null,
-    op: undefined,
-  }
-  if(lookhead.getVal() === ';') { // 下个如果不是操作符的话那就说明只是简单的基本类型或者变量
-    return getLiteral(tk)
-  }else { // 这里处理表达式的情况 前序 中序 复杂表达式
-    if(tk.getVal() === '+' || tk.getVal() === '-' || tk.getVal() === '!') { // 前序
-      return perfix(it, tk)
-    }else{ // 复杂表达式
 
-    }
-  }
-  return curAst
+  // if(lookhead.getVal() === ';') { // 下个如果不是操作符的话那就说明只是简单的基本类型或者变量 let a = 12;
+    return getLiteral(it, tk)
+  // }else { // 这里处理表达式的情况 前序 中序 复杂表达式
+  //   if(tk.getVal() === '+' || tk.getVal() === '-' || tk.getVal() === '!') { // 前序
+  //     return perfix(it, tk)
+  //   }else{ // 复杂表达式
+
+  //   }
+  // }
 }
 export const perfix =function (it: MyTokenIterator<Token>, tk: Token) {
   return {
@@ -91,5 +107,8 @@ export const StringLiteral = function (tk:Token) {
     value: tk.getVal(),
     type: 'StringLiteral'
   }
+}
+export const expressStmt = function (tk:Token) {
+
 }
 
