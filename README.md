@@ -13,7 +13,10 @@ Start the dev server,
 ```bash
 $ yarn start
 ```
-## TODO Started
+## TODO 
+## 目前进度
+<img src="./demo.jpg"/>
+
 ### 主要逻辑大概流程
 1. 词法分析
    * 对语言所有内容进行分析判断对应类型，关键字 ｜ 数字 ｜ 字符串 ｜ 变量名
