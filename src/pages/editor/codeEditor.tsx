@@ -21,14 +21,17 @@ function CodeEditor() {
           arraytoGenerator([
             ...` let a = 2 + 3 + 3 / 2; 
             func test(a,  b) {
-              const c = a + b;
-            }
+              let c = a + b;
+              return c + 5;
+            };
+            test(3, 2);
         `,
         ])
       )
       console.log(tks)
       const it = new PeekIterator<Token>(arraytoGenerator(tks), '\n')
       const program = parser(it)
+      console.log(program)
       exec(program)
   })
   return (

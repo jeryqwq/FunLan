@@ -16,7 +16,8 @@ export function getLiteral (it: MyTokenIterator<Token>,tk: Token, ast?: any,  pr
     left: null,
     right: null,
   }
-  parentAst.op =  it.peek().getVal()
+  const op = it.peek().getVal()
+  parentAst.op = op
   let curAst: any
   switch (tk.getType()) {
     case TokenType.VARIABLE.type:
@@ -37,6 +38,7 @@ export function getLiteral (it: MyTokenIterator<Token>,tk: Token, ast?: any,  pr
       }
       break;
   }
+
   const nextTk = it.next()
   if(nextTk && nextTk.getType() === TokenType.OPERATOR.type) { // 下一个还是操作符 + - * /
     const percdence = precedenceList[nextTk.getVal() as '/']
@@ -48,13 +50,13 @@ export function getLiteral (it: MyTokenIterator<Token>,tk: Token, ast?: any,  pr
       }
     }else{
       parentAst.right = curAst
-    }
-    it.peek() && getLiteral(it, it.next(), curAst, percdence)
+    }// 表达式还未结束
+    it.peek() && nextTk.getVal() !== ';' && getLiteral(it, it.next(), curAst, percdence)
   }
   return parentAst
 }
 
-export default function expression(it: MyTokenIterator<Token>, ast: any) {
+export default function expression(it: MyTokenIterator<Token>, ast?: any) {
   const tk = it.next(); // value | number | fn | var
 
   // if(lookhead.getVal() === ';') { // 下个如果不是操作符的话那就说明只是简单的基本类型或者变量 let a = 12;

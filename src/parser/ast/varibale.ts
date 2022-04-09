@@ -35,7 +35,6 @@ export default function (it: MyTokenIterator<Token>) {
   const kind = it.next()
   const varName = it.next().getVal()
   const opTk = it.next()
-  debugger
   if(opTk.getVal() !== '=') {
     throw new Error(`syntx error in ${opTk.getVal()} at ${opTk.line}, it should be =`)
   }
