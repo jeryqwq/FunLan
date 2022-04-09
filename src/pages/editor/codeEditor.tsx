@@ -16,23 +16,17 @@ function CodeEditor() {
     anchorNode?.parentNode.appendChild(el)
   }, [])
   useEffect(() => {
+      window.exec = function (code: string) {
         const lex = new Lexer()
         const tks = lex.analyse(
           arraytoGenerator([
-            ...` let a = 2 + 3 + 3 / 2; 
-            func test(a,  b) {
-              let c = a + b;
-              return c + 5;
-            };
-            test(3, 2);
-        `,
+            ...code,
         ])
       )
-      console.log(tks)
       const it = new PeekIterator<Token>(arraytoGenerator(tks), '\n')
-      const program = parser(it)
-      console.log(program)
-      exec(program)
+      const ast = parser(it)
+      exec(ast)
+      }
   })
   return (
     <div contentEditable="true" onKeyDown={handleKeyDown} style={{height: '80vh'}}>

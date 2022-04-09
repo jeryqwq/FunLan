@@ -14,7 +14,8 @@ export default function (it: MyTokenIterator<Token>){
       }
       args.push({
         value: curTk.getVal(),
-        index: index++
+        index: index++,
+        token: curTk,
       })
     }
   return {

@@ -2,12 +2,15 @@ export class SymbolTable  {
   program: any;
   vars: Record<string, any>;
   parent?: SymbolTable
-  constructor(program: any){
+  constructor(program: any, vm = {}){
     this.program = program;
-    this.vars = {}
+    this.vars = {...vm}
   }
   setParent (_: SymbolTable) {
     this.parent = _
+  }
+  set (name: string, value: any) {
+    this.vars[name] = value
   }
   getVar (key: string) {
     if(this.vars[key]) return this.vars[key];

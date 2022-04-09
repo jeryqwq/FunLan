@@ -17,7 +17,9 @@ export function getLiteral (it: MyTokenIterator<Token>,tk: Token, ast?: any,  pr
     right: null,
   }
   const op = it.peek().getVal()
-  parentAst.op = op
+  if(op !== ';') {
+    parentAst.op = op
+  }
   let curAst: any
   switch (tk.getType()) {
     case TokenType.VARIABLE.type:
@@ -82,7 +84,7 @@ export const IntegerLiteral = function (tk: Token) {
     desc: 'Integer value: is ' + tk.getVal(),
     token: tk,
     value: tk.getVal(),
-    type: 'IntegerLiteral'
+    type: 'int'
   }
 }
 export const BooleanLiteral = function (it:MyTokenIterator<Token>) {
@@ -98,7 +100,7 @@ export const VariableDeclaration = function (tk: Token) {
     desc: 'var value: is ' + tk.getVal(),
     token: tk,
     value: tk.getVal(),
-    type: 'Identifier',
+    type: 'var',
     name: tk.getVal()
   }
 }
